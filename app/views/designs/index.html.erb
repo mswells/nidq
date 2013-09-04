@@ -1,0 +1,37 @@
+<h1>Listing designs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Designid</th>
+      <th>Metricid</th>
+      <th>Productname</th>
+      <th>Consumername</th>
+      <th>Timestamp</th>
+      <th>Status</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @designs.each do |design| %>
+      <tr>
+        <td><%= design.designId %></td>
+        <td><%= design.metricId %></td>
+        <td><%= design.productName %></td>
+        <td><%= design.consumerName %></td>
+        <td><%= design.timestamp %></td>
+        <td><%= design.status %></td>
+        <td><%= link_to 'Show', design %></td>
+        <td><%= link_to 'Edit', edit_design_path(design) %></td>
+        <td><%= link_to 'Destroy', design, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Design', new_design_path %>

@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Designid:</strong>
+  <%= @design.designId %>
+</p>
+
+<p>
+  <strong>Metricid:</strong>
+  <%= @design.metricId %>
+</p>
+
+<p>
+  <strong>Productname:</strong>
+  <%= @design.productName %>
+</p>
+
+<p>
+  <strong>Consumername:</strong>
+  <%= @design.consumerName %>
+</p>
+
+<p>
+  <strong>Timestamp:</strong>
+  <%= @design.timestamp %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @design.status %>
+</p>
+
+<%= link_to 'Edit', edit_design_path(@design) %> |
+<%= link_to 'Back', designs_path %>

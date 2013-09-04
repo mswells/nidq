@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  designId: 1
+  metricId: MyString
+  productName: MyString
+  consumerName: MyString
+  timestamp: 2013-08-22 12:56:08
+  status: MyString
+
+two:
+  designId: 1
+  metricId: MyString
+  productName: MyString
+  consumerName: MyString
+  timestamp: 2013-08-22 12:56:08
+  status: MyString
