@@ -25,8 +25,29 @@ class DesignsController < ApplicationController
 
   def create
     @design = Design.new(design_params)
+    # designId increases sequentially, starting at 1 if there are no designs in the queue
+    @design.designId = Design.all.maximum(:designId) ? Design.all.maximum(:designId)+1 : 1
+    
+    # design is always in Open state initially
     @design.status = :Open
+    
+    # generate a random metricId between 284810601 and 284810699 (excluding multiples of 10 since these don't appear to have images)
+    metricIdRandom = rand 100;
+    while metricIdRandom % 10 == 0 do
+      metricIdRandom = rand 100;
+    end
+    if (metricIdRandom < 10) then 
+      @design.metricId = "28481060"+metricIdRandom.to_s 
+    else 
+      @design.metricId = "2848106"+metricIdRandom.to_s
+    end
+    
+    @design.timestamp = Time.now.utc
+    
+    #save our entry
     @design.save
+    
+    # send a notification through Urban Airship
 #    notification = {
 #      :audience => { :tags => ['Golf'] },
 #      :device_types => ['ios'],
@@ -38,6 +59,8 @@ class DesignsController < ApplicationController
       :aps => {:alert => "New design #{ @design.productName} for consumer #{ @design.consumerName }", :badge => 1}
     }
     Urbanairship.push(notification)
+    
+    # Web server response
     respond_with @design
   end
 

@@ -12,28 +12,12 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :designId %><br>
-    <%= f.number_field :designId %>
-  </div>
-  <div class="field">
-    <%= f.label :metricId %><br>
-    <%= f.text_field :metricId %>
-  </div>
-  <div class="field">
-    <%= f.label :productName %><br>
+    <%= f.label :Product %><br>
     <%= f.text_field :productName %>
   </div>
   <div class="field">
-    <%= f.label :consumerName %><br>
+    <%= f.label :Consumer %><br>
     <%= f.text_field :consumerName %>
-  </div>
-  <div class="field">
-    <%= f.label :timestamp %><br>
-    <%= f.datetime_select :timestamp %>
-  </div>
-  <div class="field">
-    <%= f.label :status %><br>
-    <%= f.text_field :status %>
   </div>
   <div class="actions">
     <%= f.submit %>
