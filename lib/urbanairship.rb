@@ -121,6 +121,7 @@ module Urbanairship
       klass = Net::HTTP.const_get(http_method.to_s.capitalize)
 
       request = klass.new(path)
+      request.[]=("Accept", "application/vnd.urbanairship+json; version=3")
       request.basic_auth @application_key, instance_variable_get("@#{options[:authenticate_with]}")
       request.add_field "Content-Type", options[:content_type] || "application/json"
       request.body = options[:body] if options[:body]

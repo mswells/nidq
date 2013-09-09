@@ -1,6 +1,12 @@
 NIDQueue::Application.routes.draw do
-  resources :designs
-  get 'designs/todays_queue' => 'designs#todays_queue'
+  resources :designs do
+    member do
+      get 'assist'
+    end
+    collection do
+      get 'todays_queue'
+    end
+  end
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

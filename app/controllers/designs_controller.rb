@@ -5,26 +5,63 @@ class DesignsController < ApplicationController
   
   respond_to :html, :json, :xml
 
+  ##############################################
+  # Boilerplate methods
+  ##############################################
+
+  #----------------------------------
   def index
     @designs = Design.all
     respond_with @Designs
   end
 
+  #----------------------------------
   def show
     @design = Design.find(params[:id])
     respond_with @design
   end
 
+  #----------------------------------
   def new
     @design = Design.new
   end
 
+  #----------------------------------
   def edit
     @design = Design.find(params[:id])
   end
 
+  #----------------------------------
   def create
     @design = Design.new(design_params)
+    populateDesignWithDefaults()
+    @design.save
+    
+    # send a notification through Urban Airship
+    sendPushNotification()
+    
+    # Web server response
+    respond_with @design
+  end
+
+  #----------------------------------
+  def update
+    @design = Design.find(params[:id])
+    @design.update_attributes([params:design])
+    respond_with @design
+  end
+
+  #----------------------------------
+  def destroy
+    @design = Design.find(params[:id])
+    @design.destroy
+    respond_with @design
+  end
+  
+  ##############################################
+  # Custom methods
+  ##############################################
+  def populateDesignWithDefaults
     # designId increases sequentially, starting at 1 if there are no designs in the queue
     @design.designId = Design.all.maximum(:designId) ? Design.all.maximum(:designId)+1 : 1
     
@@ -43,44 +80,35 @@ class DesignsController < ApplicationController
     end
     
     @design.timestamp = Time.now.utc
-    
-    #save our entry
-    @design.save
-    
-    # send a notification through Urban Airship
-#    notification = {
-#      :audience => { :tags => ['Golf'] },
-#      :device_types => ['ios'],
-#      :notification => {:alert => "New design #{ @design.productName} for consumer #{ @design.consumerName }", :badge => 1}
-#    }
+  end    
+  
+  def sendPushNotification
     notification = {
-      :tags => ['Golf'],
-      :device_types => ['ios'],
-      :aps => {:alert => "New design #{ @design.productName} for consumer #{ @design.consumerName }", :badge => 1}
+      :audience => { :tag => ["Golf"] },
+      :device_types => [ "ios" ],
+      :notification => {:alert => "New design #{ @design.productName} for consumer #{ @design.consumerName }", 
+      :ios => { :extra => { :terminal => "1", :name => @design.consumerName, :designId => @design.metricId } }}
     }
     Urbanairship.push(notification)
-    
-    # Web server response
-    respond_with @design
-  end
-
-  def update
-    @design = Design.find(params[:id])
-    @design.update_attributes([params:design])
-    respond_with @design
-  end
-
-  def destroy
-    @design = Design.find(params[:id])
-    @design.destroy
-    respond_with @design
   end
   
   def todays_queue
     @designs = Design.where(created_at: Time.now.midnight..Time.now)
     respond_with @designs
   end
+  
+  def assist
+    @design = Design.find(params[:id])
+    if @design then
+      @design.status = "Assisted"
+      @design.save
+    end
+    respond_with @design
+  end
 
+  ##############################################
+  # Private methods
+  ##############################################
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_design
